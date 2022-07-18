@@ -5,8 +5,10 @@ import com.tw.cn.example.springboot.demospringbootkotlin.service.BankService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -40,4 +42,12 @@ class BankController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     fun addBank(@RequestBody bank: Bank): Bank = bankService.addBank(bank)
+
+    @PatchMapping
+    @ResponseStatus(HttpStatus.OK)
+    fun updateBank(@RequestBody bank:Bank): Bank = bankService.updateBank(bank)
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    fun deleteBankById(@PathVariable id: String): Unit = bankService.deleteBankById(id)
 }

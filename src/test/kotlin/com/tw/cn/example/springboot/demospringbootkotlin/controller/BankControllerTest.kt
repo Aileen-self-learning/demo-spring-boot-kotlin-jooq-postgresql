@@ -2,17 +2,12 @@ package com.tw.cn.example.springboot.demospringbootkotlin.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.tw.cn.example.springboot.demospringbootkotlin.model.Bank
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.get
-import org.springframework.test.web.servlet.post
+import org.springframework.test.web.servlet.*
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -20,7 +15,6 @@ internal class BankControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
 ){
-
     @Nested
     @DisplayName("GET /banks")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -34,7 +28,7 @@ internal class BankControllerTest @Autowired constructor(
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
                     jsonPath("$[0].accountNumber"){
-                        value("123456")
+                        value("123457")
                     }
                 }
         }
@@ -55,8 +49,8 @@ internal class BankControllerTest @Autowired constructor(
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
                     jsonPath("$.accountNumber") {value("123456")}
-                    jsonPath("$.trust") {value(3.14)}
-                    jsonPath("$.transactionFee") {value(17)}
+                    jsonPath("$.trust") {value(86)}
+                    jsonPath("$.transactionFee") {value(23)}
                 }
         }
 
@@ -114,6 +108,80 @@ internal class BankControllerTest @Autowired constructor(
                 .andExpect {
                     status { isBadRequest() }
                 }
+        }
+    }
+    
+    @Nested
+    @DisplayName("PATCH /banks")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class UpdateExistingBank {
+        @Test
+        fun `should update existing bank`() {
+            //given
+            val updatedBank = Bank("123456", 85.0, 12)
+            //when
+            val performPatch = mockMvc.patch("/banks") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(updatedBank)
+            }
+            //then
+            performPatch
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON)
+                        json(objectMapper.writeValueAsString(updatedBank))
+                    }
+
+                }
+
+            mockMvc.get("/banks/${updatedBank.accountNumber}")
+                .andDo { print() }
+                .andExpect {
+                    status { isOk() }
+                    content {
+                        contentType(MediaType.APPLICATION_JSON)
+                        json(objectMapper.writeValueAsString(updatedBank))
+                    }
+                }
+        }
+
+        @Test
+        fun `should return bad request when trying to update non-existing bank`() {
+            //given
+            val invalidBank = Bank("does not exist", 65.98, 34)
+            //when
+            val performPatch = mockMvc.patch("/banks") {
+                contentType = MediaType.APPLICATION_JSON
+                content = objectMapper.writeValueAsString(invalidBank)
+            }
+            //then
+            performPatch
+                .andDo { print() }
+                .andExpect {
+                    status { isNotFound() }
+                }
+        }
+    }
+
+    @Nested
+    @DisplayName("DELETE /banks/{accountNumber}")
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    inner class deleteBankByAccountNumber {
+        @Test
+        fun `should delete an existing bank`() {
+            //given
+            val accountNumber = "123456"
+            //when
+            mockMvc.delete("/banks/${accountNumber}")
+            //then
+                .andDo { print() }
+                .andExpect { status { isNoContent() } }
+
+            mockMvc.get("/bank/${accountNumber}")
+                .andDo { print() }
+                .andExpect { status { isNotFound() } }
         }
     }
 }
