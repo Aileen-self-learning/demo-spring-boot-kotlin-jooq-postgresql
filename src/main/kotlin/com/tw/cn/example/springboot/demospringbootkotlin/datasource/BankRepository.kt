@@ -2,7 +2,8 @@ package com.tw.cn.example.springboot.demospringbootkotlin.datasource
 
 import com.tw.cn.example.springboot.demospringbootkotlin.model.Bank
 import org.jooq.DSLContext
-import org.jooq.impl.DSL
+import org.jooq.generated.Tables
+import org.jooq.generated.tables.Banks
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Repository
 
@@ -11,15 +12,14 @@ class BankRepository(
     val dslContext: DSLContext,
     val bankList: MutableList<Bank>
 ){
-    private val BANK_TABLE = DSL.table("banks")
-    private val TRANSACTION_FEE = DSL.field("transaction_fee")
-    private val TRUST = DSL.field("trust")
-    private val ACCOUNT_NUMBER = DSL.field("account_number")
+    private val fee = Banks.BANKS.TRANSACTION_FEE
+    private val trust = Banks.BANKS.TRUST
+    private val number = Banks.BANKS.ACCOUNT_NUMBER
 
     fun findAll(): Collection<Bank> {
         dslContext
             .select()
-            .from(BANK_TABLE)
+            .from(Tables.BANKS)
             .forEach{
                 bankList.add(it.into(Bank::class.java))
             }
@@ -28,18 +28,18 @@ class BankRepository(
 
     fun retrieveBankById(id: String): Bank {
         val foundRecord = dslContext
-            .selectFrom(BANK_TABLE)
-            .where(ACCOUNT_NUMBER.eq(id))
+            .selectFrom(Tables.BANKS)
+            .where(number.eq(id))
             .fetchOne() ?: throw NoSuchElementException("Could not find bank with accountNumber $id")
         return foundRecord.into(Bank::class.java)
     }
 
     fun createBank(bank: Bank): Bank {
         try {
-            val insertQuery = dslContext.insertQuery(BANK_TABLE)
-            insertQuery.addValue(ACCOUNT_NUMBER, bank.accountNumber)
-            insertQuery.addValue(TRUST, bank.trust)
-            insertQuery.addValue(TRANSACTION_FEE, bank.transactionFee)
+            val insertQuery = dslContext.insertQuery(Tables.BANKS)
+            insertQuery.addValue(number, bank.accountNumber)
+            insertQuery.addValue(trust, bank.trust)
+            insertQuery.addValue(fee, bank.transactionFee)
             insertQuery.execute()
             return bank
         }catch (e: DuplicateKeyException) {
@@ -49,22 +49,22 @@ class BankRepository(
 
     fun updateBank(bank: Bank): Bank {
         val foundRecord = dslContext
-            .selectFrom(BANK_TABLE)
-            .where(ACCOUNT_NUMBER.eq(bank.accountNumber))
+            .selectFrom(Tables.BANKS)
+            .where(number.eq(bank.accountNumber))
             .fetchOne()
         foundRecord?: throw NoSuchElementException("Could not find bank with accountNumber ${bank.accountNumber}")
         dslContext
-            .update(BANK_TABLE)
-            .set(TRUST, bank.trust)
-            .set(TRANSACTION_FEE, bank.transactionFee)
-            .where(ACCOUNT_NUMBER.eq(bank.accountNumber))
+            .update(Tables.BANKS)
+            .set(trust, bank.trust)
+            .set(fee, bank.transactionFee)
+            .where(number.eq(bank.accountNumber))
             .execute()
         return bank
     }
 
     fun deleteBankById(id: String) {
-        dslContext.delete(BANK_TABLE)
-            .where(ACCOUNT_NUMBER.eq(id))
+        dslContext.delete(Tables.BANKS)
+            .where(number.eq(id))
             .execute()
     }
 }
