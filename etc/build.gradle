@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group 'com.tw.cn.example.springboot'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+task wrapper(type: Wrapper){
+    gradleVersion = '7.4.1'
+}
+
+task prepareKotlinBuildScriptModel {
+
+}

@@ -12,14 +12,14 @@ class BankRepository(
     val bankList: MutableList<Bank>
 ){
     private val BANK_TABLE = DSL.table("banks")
-    private val TRANSANCTION_FEE = DSL.field("transaction_fee")
+    private val TRANSACTION_FEE = DSL.field("transaction_fee")
     private val TRUST = DSL.field("trust")
     private val ACCOUNT_NUMBER = DSL.field("account_number")
 
     fun findAll(): Collection<Bank> {
         dslContext
             .select()
-            .from("banks")
+            .from(BANK_TABLE)
             .forEach{
                 bankList.add(it.into(Bank::class.java))
             }
@@ -39,7 +39,7 @@ class BankRepository(
             val insertQuery = dslContext.insertQuery(BANK_TABLE)
             insertQuery.addValue(ACCOUNT_NUMBER, bank.accountNumber)
             insertQuery.addValue(TRUST, bank.trust)
-            insertQuery.addValue(TRANSANCTION_FEE, bank.transactionFee)
+            insertQuery.addValue(TRANSACTION_FEE, bank.transactionFee)
             insertQuery.execute()
             return bank
         }catch (e: DuplicateKeyException) {
@@ -56,7 +56,7 @@ class BankRepository(
         dslContext
             .update(BANK_TABLE)
             .set(TRUST, bank.trust)
-            .set(TRANSANCTION_FEE, bank.transactionFee)
+            .set(TRANSACTION_FEE, bank.transactionFee)
             .where(ACCOUNT_NUMBER.eq(bank.accountNumber))
             .execute()
         return bank

@@ -1,7 +1,6 @@
-DROP TABLE IF EXISTS banks;
-CREATE TABLE banks
+CREATE TABLE IF NOT EXISTS banks
 (
     account_number  VARCHAR(255) NOT NULL PRIMARY KEY,
-    trust     FLOAT(8) NOT NULL,
+    trust     FLOAT8 NOT NULL,
     transaction_fee  INT NOT NULL
 );

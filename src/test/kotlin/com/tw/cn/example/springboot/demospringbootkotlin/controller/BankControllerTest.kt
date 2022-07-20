@@ -15,6 +15,7 @@ internal class BankControllerTest @Autowired constructor(
     val mockMvc: MockMvc,
     val objectMapper: ObjectMapper
 ){
+
     @Nested
     @DisplayName("GET /banks")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
