@@ -3,6 +3,7 @@
 ## Tech Stack
     jooq
     spring boot
+    spring security
     kotlin
     postgresql
     java
