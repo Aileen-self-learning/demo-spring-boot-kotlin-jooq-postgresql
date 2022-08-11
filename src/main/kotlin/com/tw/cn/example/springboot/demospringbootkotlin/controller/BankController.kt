@@ -5,6 +5,7 @@ import com.tw.cn.example.springboot.demospringbootkotlin.service.BankService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
@@ -32,6 +33,7 @@ class BankController {
     lateinit var bankService: BankService
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     fun getBanks(): Collection<Bank> = bankService.getBanks()
 
     @GetMapping("/{id}")

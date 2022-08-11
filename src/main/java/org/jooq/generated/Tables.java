@@ -7,6 +7,7 @@ package org.jooq.generated;
 import org.jooq.generated.tables.Banks;
 import org.jooq.generated.tables.FlywaySchemaHistory;
 import org.jooq.generated.tables.TableName;
+import org.jooq.generated.tables.Users;
 
 
 /**
@@ -29,4 +30,9 @@ public class Tables {
      * The table <code>public.table_name</code>.
      */
     public static final TableName TABLE_NAME = TableName.TABLE_NAME;
+
+    /**
+     * The table <code>public.users</code>.
+     */
+    public static final Users USERS = Users.USERS;
 }

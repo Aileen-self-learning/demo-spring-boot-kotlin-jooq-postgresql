@@ -12,6 +12,7 @@ import org.jooq.Table;
 import org.jooq.generated.tables.Banks;
 import org.jooq.generated.tables.FlywaySchemaHistory;
 import org.jooq.generated.tables.TableName;
+import org.jooq.generated.tables.Users;
 import org.jooq.impl.SchemaImpl;
 
 
@@ -44,6 +45,11 @@ public class Public extends SchemaImpl {
     public final TableName TABLE_NAME = TableName.TABLE_NAME;
 
     /**
+     * The table <code>public.users</code>.
+     */
+    public final Users USERS = Users.USERS;
+
+    /**
      * No further instances allowed
      */
     private Public() {
@@ -61,7 +67,8 @@ public class Public extends SchemaImpl {
         return Arrays.asList(
             Banks.BANKS,
             FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY,
-            TableName.TABLE_NAME
+            TableName.TABLE_NAME,
+            Users.USERS
         );
     }
 }

@@ -9,9 +9,11 @@ import org.jooq.UniqueKey;
 import org.jooq.generated.tables.Banks;
 import org.jooq.generated.tables.FlywaySchemaHistory;
 import org.jooq.generated.tables.TableName;
+import org.jooq.generated.tables.Users;
 import org.jooq.generated.tables.records.BanksRecord;
 import org.jooq.generated.tables.records.FlywaySchemaHistoryRecord;
 import org.jooq.generated.tables.records.TableNameRecord;
+import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.impl.DSL;
 import org.jooq.impl.Internal;
 
@@ -30,4 +32,5 @@ public class Keys {
     public static final UniqueKey<BanksRecord> BANKS_PK = Internal.createUniqueKey(Banks.BANKS, DSL.name("banks_pk"), new TableField[] { Banks.BANKS.ACCOUNT_NUMBER }, true);
     public static final UniqueKey<FlywaySchemaHistoryRecord> FLYWAY_SCHEMA_HISTORY_PK = Internal.createUniqueKey(FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY, DSL.name("flyway_schema_history_pk"), new TableField[] { FlywaySchemaHistory.FLYWAY_SCHEMA_HISTORY.INSTALLED_RANK }, true);
     public static final UniqueKey<TableNameRecord> TABLE_NAME_PK = Internal.createUniqueKey(TableName.TABLE_NAME, DSL.name("table_name_pk"), new TableField[] { TableName.TABLE_NAME.COLUMN_1 }, true);
+    public static final UniqueKey<UsersRecord> USERS_PK = Internal.createUniqueKey(Users.USERS, DSL.name("users_pk"), new TableField[] { Users.USERS.UID }, true);
 }
