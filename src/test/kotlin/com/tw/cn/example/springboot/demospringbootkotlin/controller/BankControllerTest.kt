@@ -74,7 +74,7 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("POST /banks")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    @WithMockUser
+    @WithMockUser(roles = ["ADMIN"])
     inner class PostNewBank {
         @Test
         fun `should create a new bank`() {
@@ -119,7 +119,7 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("PATCH /banks")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    @WithMockUser
+    @WithMockUser(roles = ["ADMIN"])
     inner class UpdateExistingBank {
         @Test
         fun `should update existing bank`() {
@@ -174,7 +174,7 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("DELETE /banks/{accountNumber}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-    @WithMockUser
+    @WithMockUser(roles = ["ADMIN"])
     inner class deleteBankByAccountNumber {
         @Test
         fun `should delete an existing bank`() {

@@ -3,6 +3,7 @@ package com.tw.cn.example.springboot.demospringbootkotlin.configuration
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -11,12 +12,16 @@ import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
 
+
+
 @Configuration
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 class SecurityConfig : WebSecurityConfigurerAdapter() {
 
     @Autowired
     lateinit var uds: UserDetailsService
+
+    private val bankEndpoint = "/banks/**"
 
     override fun configure(auth: AuthenticationManagerBuilder?) {
         auth?.userDetailsService(uds)?.passwordEncoder(password())
@@ -25,7 +30,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
     override fun configure(http: HttpSecurity?)  {
         http
             ?.authorizeRequests()
-            ?.antMatchers("/**","/login","/resources/**")?.permitAll()
+            ?.antMatchers("/login")?.permitAll()
+            ?.antMatchers(HttpMethod.POST, bankEndpoint)?.hasRole("ADMIN")
+            ?.antMatchers(HttpMethod.PATCH, bankEndpoint)?.hasRole("ADMIN")
+            ?.antMatchers(HttpMethod.DELETE, bankEndpoint)?.hasRole("ADMIN")
             ?.anyRequest()?.authenticated()
             ?.and()?.formLogin()
             ?.loginPage("/login")
@@ -33,7 +41,7 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.permitAll()
             ?.and()?.logout()
             ?.permitAll()
-        http?.csrf()?.ignoringAntMatchers("/banks/**")
+        http?.csrf()?.ignoringAntMatchers(bankEndpoint)
     }
 
     @Bean
