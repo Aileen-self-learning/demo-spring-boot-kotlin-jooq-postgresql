@@ -5,7 +5,6 @@ import com.tw.cn.example.springboot.demospringbootkotlin.service.BankService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.GetMapping
@@ -42,16 +41,13 @@ class BankController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("hasRole('ADMIN')")
     fun addBank(@RequestBody bank: Bank): Bank = bankService.addBank(bank)
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
-    @PreAuthorize("hasRole('ADMIN')")
     fun updateBank(@RequestBody bank:Bank): Bank = bankService.updateBank(bank)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    @PreAuthorize("hasRole('ADMIN')")
     fun deleteBankById(@PathVariable id: String): Unit = bankService.deleteBankById(id)
 }

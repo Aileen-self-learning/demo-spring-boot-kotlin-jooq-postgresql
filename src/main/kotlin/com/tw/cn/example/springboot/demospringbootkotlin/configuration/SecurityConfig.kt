@@ -30,7 +30,10 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
             ?.and()?.formLogin()
             ?.loginPage("/login")
             ?.defaultSuccessUrl("/index")
-        http?.csrf { it.disable() }
+            ?.permitAll()
+            ?.and()?.logout()
+            ?.permitAll()
+        http?.csrf()?.ignoringAntMatchers("/banks/**")
     }
 
     @Bean
