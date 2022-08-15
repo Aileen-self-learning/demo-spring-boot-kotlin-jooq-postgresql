@@ -40,6 +40,8 @@ dependencies {
 	implementation("org.jooq:jooq")
 	implementation("org.jooq:jooq-codegen")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+	implementation("org.springframework.security:spring-security-test")
 	runtimeOnly("org.postgresql:postgresql")
 	jooqGenerator("org.postgresql:postgresql")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")

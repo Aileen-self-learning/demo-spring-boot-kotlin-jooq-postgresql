@@ -33,7 +33,6 @@ class BankController {
     lateinit var bankService: BankService
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
     fun getBanks(): Collection<Bank> = bankService.getBanks()
 
     @GetMapping("/{id}")
@@ -43,13 +42,16 @@ class BankController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     fun addBank(@RequestBody bank: Bank): Bank = bankService.addBank(bank)
 
     @PatchMapping
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     fun updateBank(@RequestBody bank:Bank): Bank = bankService.updateBank(bank)
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
+    @PreAuthorize("hasRole('ADMIN')")
     fun deleteBankById(@PathVariable id: String): Unit = bankService.deleteBankById(id)
 }

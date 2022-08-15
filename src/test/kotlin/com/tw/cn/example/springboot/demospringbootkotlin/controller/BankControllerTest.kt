@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.http.MediaType
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.test.web.servlet.*
 
 @SpringBootTest
@@ -21,6 +22,7 @@ internal class BankControllerTest @Autowired constructor(
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     inner class GetBanks{
         @Test
+        @WithMockUser
         fun `should return all banks`() {
             // when/then
             mockMvc.get("/banks")
@@ -29,7 +31,7 @@ internal class BankControllerTest @Autowired constructor(
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
                     jsonPath("$[0].accountNumber"){
-                        value("123457")
+                        value("qwerty")
                     }
                 }
         }
@@ -38,6 +40,7 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("GET /banks/accountNumber")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser
     inner class GetBankById{
         @Test
         fun `should return bank with given account number`() {
@@ -50,8 +53,8 @@ internal class BankControllerTest @Autowired constructor(
                     status { isOk() }
                     content { contentType(MediaType.APPLICATION_JSON) }
                     jsonPath("$.accountNumber") {value("123456")}
-                    jsonPath("$.trust") {value(86)}
-                    jsonPath("$.transactionFee") {value(23)}
+                    jsonPath("$.trust") {value(43.99)}
+                    jsonPath("$.transactionFee") {value(20)}
                 }
         }
 
@@ -71,11 +74,12 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("POST /banks")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser
     inner class PostNewBank {
         @Test
         fun `should create a new bank`() {
             //given
-            val newBank = Bank("123459", 5.65, 12)
+            val newBank = Bank("123459", 58.65, 12)
             //when
             val performPost = mockMvc.post("/banks") {
                 contentType = MediaType.APPLICATION_JSON
@@ -88,7 +92,7 @@ internal class BankControllerTest @Autowired constructor(
                     status { isCreated() }
                     content { contentType(MediaType.APPLICATION_JSON) }
                     jsonPath("$.accountNumber") {value("123459")}
-                    jsonPath("$.trust") {value(5.65)}
+                    jsonPath("$.trust") {value(58.65)}
                     jsonPath("$.transactionFee") {value(12)}
                 }
 
@@ -115,11 +119,12 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("PATCH /banks")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser
     inner class UpdateExistingBank {
         @Test
         fun `should update existing bank`() {
             //given
-            val updatedBank = Bank("123456", 85.0, 12)
+            val updatedBank = Bank("123459", 85.0, 12)
             //when
             val performPatch = mockMvc.patch("/banks") {
                 contentType = MediaType.APPLICATION_JSON
@@ -169,11 +174,12 @@ internal class BankControllerTest @Autowired constructor(
     @Nested
     @DisplayName("DELETE /banks/{accountNumber}")
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+    @WithMockUser
     inner class deleteBankByAccountNumber {
         @Test
         fun `should delete an existing bank`() {
             //given
-            val accountNumber = "123456"
+            val accountNumber = "123459"
             //when
             mockMvc.delete("/banks/${accountNumber}")
             //then

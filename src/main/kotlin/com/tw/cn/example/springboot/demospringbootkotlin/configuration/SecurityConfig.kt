@@ -22,11 +22,15 @@ class SecurityConfig : WebSecurityConfigurerAdapter() {
         auth?.userDetailsService(uds)?.passwordEncoder(password())
     }
 
-    override fun configure(http: HttpSecurity?) {
-        http?.csrf()?.disable()?.authorizeRequests()
-            ?.antMatchers("/error")?.permitAll()
+    override fun configure(http: HttpSecurity?)  {
+        http
+            ?.authorizeRequests()
+            ?.antMatchers("/**","/login","/resources/**")?.permitAll()
             ?.anyRequest()?.authenticated()
-            ?.and()?.httpBasic()
+            ?.and()?.formLogin()
+            ?.loginPage("/login")
+            ?.defaultSuccessUrl("/index")
+        http?.csrf { it.disable() }
     }
 
     @Bean
